@@ -7,7 +7,7 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import { EditOutlined, Password } from "@mui/icons-material";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import { Formik } from "formik";
 import * as yup from "yup";
 import { useNavigate } from "react-router-dom";
@@ -36,7 +36,7 @@ const initialValuesRegister = {
   lastName: "",
   email: "",
   password: "",
-  address: "",
+  location: "",
   occupation: "",
   picture: "",
 };
@@ -51,7 +51,7 @@ const Form = () => {
   const { palette } = useTheme();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const isNonMobile = useMediaQuery("(min-width: 600px)");
+  const isNonMobile = useMediaQuery("(min-width:600px)");
   const isLogin = pageType === "login";
   const isRegister = pageType === "register";
 
@@ -71,7 +71,7 @@ const Form = () => {
       }
     );
     const savedUser = await savedUserResponse.json();
-    onSubmitProps.resetform();
+    onSubmitProps.resetForm();
 
     if (savedUser) {
       setPageType("login");
@@ -81,13 +81,11 @@ const Form = () => {
   const login = async (values, onSubmitProps) => {
     const loggedInResponse = await fetch("http://localhost:3001/auth/login", {
       method: "POST",
-      headers: {
-        "Content-type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(values),
     });
     const loggedIn = await loggedInResponse.json();
-    onSubmitProps.resetform();
+    onSubmitProps.resetForm();
     if (loggedIn) {
       dispatch(
         setLogin({
@@ -114,21 +112,19 @@ const Form = () => {
         values,
         errors,
         touched,
-        handleChange,
         handleBlur,
+        handleChange,
         handleSubmit,
         setFieldValue,
-        resetform,
+        resetForm,
       }) => (
         <form onSubmit={handleSubmit}>
           <Box
             display="grid"
             gap="30px"
-            gridTemplateColumns="repete(4, minmax(0, 1fr))"
+            gridTemplateColumns="repeat(4, minmax(0, 1fr))"
             sx={{
-              "& > div": {
-                gridColumn: isNonMobile ? undefined : "span 4",
-              },
+              "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
             }}
           >
             {isRegister && (
@@ -139,52 +135,44 @@ const Form = () => {
                   onChange={handleChange}
                   value={values.firstName}
                   name="firstName"
-                  error={touched.firstName && Boolean(errors.firstName)}
+                  error={
+                    Boolean(touched.firstName) && Boolean(errors.firstName)
+                  }
                   helperText={touched.firstName && errors.firstName}
-                  sx={{
-                    gridColumn: "span 2",
-                  }}
+                  sx={{ gridColumn: "span 2" }}
                 />
-
                 <TextField
                   label="Last Name"
                   onBlur={handleBlur}
                   onChange={handleChange}
                   value={values.lastName}
                   name="lastName"
-                  error={touched.lastName && Boolean(errors.lastName)}
+                  error={Boolean(touched.lastName) && Boolean(errors.lastName)}
                   helperText={touched.lastName && errors.lastName}
-                  sx={{
-                    gridColumn: "span 2",
-                  }}
+                  sx={{ gridColumn: "span 2" }}
                 />
-
                 <TextField
-                  label="Address"
+                  label="Location"
                   onBlur={handleBlur}
                   onChange={handleChange}
-                  value={values.address}
-                  name="address"
-                  error={touched.address && Boolean(errors.address)}
-                  helperText={touched.address && errors.address}
-                  sx={{
-                    gridColumn: "span 4",
-                  }}
+                  value={values.location}
+                  name="location"
+                  error={Boolean(touched.location) && Boolean(errors.location)}
+                  helperText={touched.location && errors.location}
+                  sx={{ gridColumn: "span 4" }}
                 />
-
                 <TextField
                   label="Occupation"
                   onBlur={handleBlur}
                   onChange={handleChange}
                   value={values.occupation}
                   name="occupation"
-                  error={touched.occupation && Boolean(errors.occupation)}
+                  error={
+                    Boolean(touched.occupation) && Boolean(errors.occupation)
+                  }
                   helperText={touched.occupation && errors.occupation}
-                  sx={{
-                    gridColumn: "span 4",
-                  }}
+                  sx={{ gridColumn: "span 4" }}
                 />
-
                 <Box
                   gridColumn="span 4"
                   border={`1px solid ${palette.neutral.medium}`}
@@ -192,10 +180,10 @@ const Form = () => {
                   p="1rem"
                 >
                   <Dropzone
-                    acceptedFiles=".jpg, .jpeg, .png"
+                    acceptedFiles=".jpg,.jpeg,.png"
                     multiple={false}
                     onDrop={(acceptedFiles) =>
-                      setFieldValue("picture", acceptedFiles(0))
+                      setFieldValue("picture", acceptedFiles[0])
                     }
                   >
                     {({ getRootProps, getInputProps }) => (
@@ -211,6 +199,7 @@ const Form = () => {
                         ) : (
                           <FlexBetween>
                             <Typography>{values.picture.name}</Typography>
+                            <EditOutlinedIcon />
                           </FlexBetween>
                         )}
                       </Box>
@@ -226,24 +215,20 @@ const Form = () => {
               onChange={handleChange}
               value={values.email}
               name="email"
-              error={touched.email && Boolean(errors.email)}
+              error={Boolean(touched.email) && Boolean(errors.email)}
               helperText={touched.email && errors.email}
-              sx={{
-                gridColumn: "span 4",
-              }}
+              sx={{ gridColumn: "span 4" }}
             />
-
             <TextField
               label="Password"
+              type="password"
               onBlur={handleBlur}
               onChange={handleChange}
               value={values.password}
               name="password"
-              error={touched.password && Boolean(errors.password)}
+              error={Boolean(touched.password) && Boolean(errors.password)}
               helperText={touched.password && errors.password}
-              sx={{
-                gridColumn: "span 4",
-              }}
+              sx={{ gridColumn: "span 4" }}
             />
           </Box>
 
@@ -265,7 +250,7 @@ const Form = () => {
             <Typography
               onClick={() => {
                 setPageType(isLogin ? "register" : "login");
-                resetform();
+                resetForm();
               }}
               sx={{
                 textDecoration: "underline",
@@ -277,8 +262,8 @@ const Form = () => {
               }}
             >
               {isLogin
-                ? "Don't have an account? Sign up here."
-                : "Already have an account? Login here"}
+                ? "Don't have an account? Sign Up here."
+                : "Already have an account? Login here."}
             </Typography>
           </Box>
         </form>
