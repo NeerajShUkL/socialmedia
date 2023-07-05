@@ -57,7 +57,7 @@ const Navbar = () => {
             },
           }}
         >
-          Sociopedia
+          Happy's world
         </Typography>
         {isNonMobileScreens && (
           <FlexBetween
